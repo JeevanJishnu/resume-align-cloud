@@ -4,7 +4,6 @@ import logging
 import json
 import cv2
 import numpy as np
-import torch
 import re
 import fitz  # PyMuPDF
 from fastapi import FastAPI, UploadFile, File, HTTPException, BackgroundTasks
@@ -14,11 +13,19 @@ from pydantic import BaseModel
 from typing import List, Dict, Any, Optional
 from datetime import datetime
 from docx import Document
-from transformers import LayoutLMv3Processor, LayoutLMv3ForSequenceClassification
 from PIL import Image
 import io
 from fuzzywuzzy import fuzz
 from fastapi.responses import FileResponse
+
+# Optional heavy imports (not needed for cloud deployment)
+try:
+    import torch
+    from transformers import LayoutLMv3Processor, LayoutLMv3ForSequenceClassification
+    TORCH_AVAILABLE = True
+except ImportError:
+    TORCH_AVAILABLE = False
+    print("Warning: PyTorch/Transformers not available. Some features disabled.")
 
 # Phase 2 Imports
 from template_engine.template_models import TemplateSchema
